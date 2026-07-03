@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم TIGER</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #121212; color: #ffffff; margin: 0; padding: 20px; text-align: center; }
+        .container { max-width: 600px; margin: auto; background: #1e1e1e; padding: 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(230, 92, 0, 0.3); border: 1px solid #e65c00; }
+        h1 { color: #e65c00; margin-bottom: 25px; }
+        .card { background: #2a2a2a; padding: 15px; margin: 15px 0; border-radius: 8px; border-right: 5px solid #e65c00; text-align: right; }
+        .btn { background: #e65c00; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; width: 100%; transition: 0.3s; }
+        .btn:hover { background: #ff751a; }
+        .footer { margin-top: 30px; font-size: 12px; color: #777; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>لوحة تحكم منصة TIGER</h1>
+        
+        <div class="card">
+            <h3>📊 إحصائيات النظام</h3>
+            <p>إجمالي الأعضاء النشطين: <strong style="color: #e65c00;">0</strong></p>
+            <p>طلبات السحب المعلقة: <strong style="color: #e65c00;">0</strong></p>
+        </div>
+
+        <div class="card">
+            <h3>💰 إدارة العمليات المالية</h3>
+            <p>حالة بوابة إيداع USDT: <span style="color: #00ff00;">نشطة ✅</span></p>
+            <p>حالة بوابة السحب: <span style="color: #00ff00;">نشطة ✅</span></p>
+        </div>
+
+        <button class="btn" onclick="checkServer()">فحص اتصال السيرفر بـ قاعدة البيانات</button>
+        <p id="status-text" style="margin-top: 15px; color: #ff751a;"></p>
+    </div>
+
+    <div class="footer">جميع الحقوق محفوظة لمنصة TIGER © 2026</div>
+
+    <script>
+        function checkServer() {
+            const statusText = document.getElementById('status-text');
+            statusText.innerText = "جاري الفحص...";
+            fetch('/db-check')
+                .then(res => res.json())
+                .then(data => {
+                    if(data.success) {
+                        statusText.style.color = "#00ff00";
+                        statusText.innerText = "متصل بنجاح بقاعدة البيانات الـ Postgres! ✅";
+                    } else {
+                        statusText.style.color = "#ff0000";
+                        statusText.innerText = "خطأ في الاتصال: " + data.error;
+                    }
+                })
+                .catch(err => {
+                    statusText.style.color = "#ff0000";
+                    statusText.innerText = "السيرفر غير متصل حالياً.";
+                });
+        }
+    </script>
+</body>
+</html>
